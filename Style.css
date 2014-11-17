@@ -1,0 +1,86 @@
+/* Tokyo Metro App | jQuery, AngularJS, Bootstrap | JavaScript, html5, CSS3 Study | (c) 2014 twitter@sumo_ninja_jp
+*/
+@charset "UTF-8";
+
+body,
+header,
+footer,
+p,
+ul,
+li,
+h1,
+h2,
+h3 {
+ font-family: 'Open Sans', sans-serif;
+ text-wrap: unrestricted;
+ white-space: normal;
+ word-break: break-all;
+ word-wrap: break-word;
+}
+body,
+html {
+ height: 100%;
+}
+body {
+ padding-top: 70px;
+ position: relative;
+}
+/*
+https://developer.tokyometroapp.jp/guideline#%E3%83%A9%E3%82%A4%E3%83%B3%E3%82%AB%E3%83%A9%E3%83%BC
+*/
+.Ginza {
+ background-color: #FF9500!important;
+}
+
+.Marunouchi {
+ background-color: #F62E36!important;
+ color: black!important;
+}
+
+.Hibiya {
+ background-color: #B5B5AC!important;
+}
+
+.Tozai {
+ background-color: #009BBF!important;
+}
+
+
+.Chiyoda {
+ background-color: #00BB85!important;
+}
+
+.Yurakucho {
+ background-color: #C1A470!important;
+}
+
+.Hanzomon {
+ background-color: #8F76D6!important;
+}
+
+.Namboku {
+ background-color: #00AC9B!important;
+}
+
+.Fukutoshin {
+ background-color: #9C5E31!important;
+ color: black!important;
+}
+/*
+http://www.colordic.org/m/
+*/
+.Asakusa {
+ background-color: #e85298!important;
+}
+
+.Mita {
+ background-color: #0079c2!important;
+}
+
+.Shinjuku {
+ background-color: #6cbb5a!important;
+}
+
+.Oedo {
+ background-color: #b6007a!important;
+}
