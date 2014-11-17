@@ -1,0 +1,285 @@
+<!doctype html>
+<!-- Tokyo Metro App | jQuery, AngularJS, Bootstrap | JavaScript, html5, CSS3 Study | (c) 2014 twitter@sumo_ninja_jp -->
+
+<html ng-app="app20141117">
+<head>
+  <title>MetroTracker.HTML Manual</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
+
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <!--link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" /-->
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700" />
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+<div ng-controller="app20141117Controller" class="container">
+
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-menu">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+
+    <a class="navbar-brand" href="#">{{app.name}}</a>
+  </div>
+  <div class="collapse navbar-collapse" id="nav-menu">
+    <ul class="nav navbar-nav">
+      <li><a href="#s1">1. メイン画面</a></li>
+      <li><a href="#s2">2. メイン画面 (列車情報)</a></li>
+      <li><a href="#s3">3. メイン画面 (メニュー)</a></li>
+      <li><a href="#s4">4. 列車選択画面</a></li>
+      <li><a href="#s5">5. Settings画面</a></li>
+      <li><a href="#s6">6. 列車情報、列車時刻表画面</a></li>
+      <li><a href="#s7">7. アプリケーション情報画面</a></li>
+      <li><a href="#" ng-click="showAboutDlg()">About...</a></li>
+    </ul>
+  </div>
+  </div>
+</nav>
+
+<div class="modal fade" id="aboutDlg" tabindex="-1" role="dialog" aria-labelledby="aboutDlg" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">{{app.name}}</h4>
+      </div>
+      <div class="modal-body">
+<h4>Version {{app.version}}</h4>
+<p>
+Tracking Tokyo Metro Train(s) you're taking on.
+Designed for and developed on iPhone.
+</p>
+<p>
+Copyright 2014 Takashi KOBAYASHI
+<br>
+<a href="http://twitter.com/sumo_ninja_jp" target="_blank">twitter@sumo_ninja_jp</a>
+</p>
+<p>
+Source code under GPL:
+<br>
+<a href="https://github.com/takashikobayashi/MetroTracker.HTML" target="_blank" >takashikobayashi / MetroTracker.HTML</a>
+</p>
+<h4>Special thanks to:</h4>
+<p>
+bootstrap 3.3.1
+<br>
+<a href="http://getbootstrap.com" target="_blank">http://getbootstrap.com</a>
+</p>
+<p>
+angularjs 1.3.0
+<br>
+<a href="https://angularjs.org" target="_blank">https://angularjs.org</a>
+</p>
+<p>
+jQuery 2.1.1
+<br>
+<a href="http://jquery.com" target="_blank">http://jquery.com</a>
+</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="container-fluid">
+<div class="row">
+  <div class="col-xs-12 col-md-6" id="s1">
+    <div class="caption">
+      <h3>1. メイン画面</h3>
+      <p>
+<ul>
+  <li>タイトル</li>
+  <p>アプリケーションのタイトル</p>
+  <li>メニュー</li>
+  <p>Settings画面等を選択</p>
+  <li>列車運行情報</li>
+  <p>列車運行情報を表示</p>
+  <li>列車情報</li>
+  <p>列車のトラッキング情報を表示</p>
+  <li>Tap Hereボタン</li>
+  <p>トラッキングする列車の選択画面を表示</p>
+  <li>プログレスバー</li>
+  <p>列車運行情報やトラッキングする列車の情報の更新時に進展状況を表示</p>
+</ul>
+      </p>
+    </div>
+    <a href="#" class="thumbnail">
+      <img src="https://dl.dropboxusercontent.com/u/135100373/contest/manual/img/%E5%86%99%E7%9C%9F%202014-11-17%209%2030%2030.png" alt="">
+    </a>
+  </div>
+
+  <div class="col-xs-12 col-md-6" id="s2">
+    <div class="caption">
+      <h3>2. メイン画面 (列車情報)</h3>
+      <p>
+<ul>
+  <li>列車情報</li>
+  <p>路線、方面、列車種別、行き先を表示</p>
+  <li>運行情報</li>
+  <p>列車のロケーションを表示</p>
+  <li>取得日時</li>
+  <p>情報の取得日時を表示</p>
+  <li>Info & Timetableリンク</li>
+  <p>列車情報、列車時刻表、ロケーション情報画面を表示</p>
+  <li>Deleteリンク</li>
+  <p>列車運行情報を削除</p>
+</ul>
+      </p>
+    </div>
+    <a href="#" class="thumbnail">
+      <img src="https://dl.dropboxusercontent.com/u/135100373/contest/manual/img/%E5%86%99%E7%9C%9F%202014-11-17%209%2040%2022.png" alt="">
+    </a>
+  </div>
+
+  <div class="col-xs-12 col-md-6">
+    <div class="caption">
+      <p>選択した複数の列車運行情報を表示</p>
+    </div>
+    <a href="#" class="thumbnail">
+      <img src="https://dl.dropboxusercontent.com/u/135100373/contest/manual/img/%E5%86%99%E7%9C%9F%202014-11-17%209%2042%2018.png" alt="">
+    </a>
+  </div>
+
+  <div class="col-xs-12 col-md-6">
+    <div class="caption">
+      <p>行き先に到着後など、古くなった列車運行情報は、自動で削除 (Settingsで自動削除しないように設定することも可能)</p>
+    </div>
+    <a href="#" class="thumbnail">
+      <img src="https://dl.dropboxusercontent.com/u/135100373/contest/manual/img/%E5%86%99%E7%9C%9F%202014-11-17%209%2048%2047.png" alt="">
+    </a>
+  </div>
+
+  <div class="col-xs-12 col-md-6" id="s3">
+    <div class="caption">
+      <h3>3. メイン画面 (メニュー)</h3>
+      <p>
+<ul>
+  <li>Add Tracking Trains...</li>
+  <p>トラッキングする列車の選択画面を表示</p>
+  <li>Update Train Info Now</li>
+  <p>現在の列車運行情報を取得</p>
+  <li>Update Tracking Info Now</li>
+  <p>現在の列車のトラッキング情報を取得</p>
+  <li>Setting...</li>
+  <p>設定を変更するSettings画面を表示</p>
+  <li>Help...</li>
+  <p>Help画面を表示 (この画面)</p>
+  <li>About...</li>
+  <p>アプリケーション情報表示画面を表示</p>
+</ul>
+      </p>
+    </div>
+    <a href="#" class="thumbnail">
+      <img src="https://dl.dropboxusercontent.com/u/135100373/contest/manual/img/%E5%86%99%E7%9C%9F%202014-11-17%2013%2020%2008.png" alt="">
+    </a>
+  </div>
+
+  <div class="col-xs-12 col-md-6" id="s4">
+    <div class="caption">
+      <h3>4. 列車選択画面</h3>
+      <p>
+<ul>
+  <li>Near Stationsリスト</li>
+  <p>GPSで取得した現在地に近い駅をリスト表示</p>
+  <li>Near Trainsリスト</li>
+  <p>選択した駅に向かっている列車、停車している列車をリスト表示</p>
+  <li>Get Trainsボタン</li>
+  <p>列車リストを更新</p>
+  <li>プログレスバー</li>
+  <p>列車リスト取得時に進展状況を表示</p>
+  <li>Closeボタン</li>
+  <p>列車選択画面を閉じる</p>
+  <li>Addボタン</li>
+  <p>メイン画面に列車運行情報を追加</p>
+</ul>
+      </p>
+    </div>
+    <a href="#" class="thumbnail">
+      <img src="https://dl.dropboxusercontent.com/u/135100373/contest/manual/img/%E5%86%99%E7%9C%9F%202014-11-17%209%2040%2002.png" alt="">
+    </a>
+  </div>
+
+  <div class="col-xs-12 col-md-6" id="s5">
+    <div class="caption">
+      <h3>5. Settings画面</h3>
+      <p>
+<ul>
+  <li>Show Train Info</li>
+  <p>列車運行情報の表示、非表示を選択</p>
+  <li>Auto Update Train Info</li>
+  <p>列車運行情報、列車トラッキング情報の自動更新をするかどうか選択</p>
+  <li>Auto Update Time (minutes)</li>
+  <p>自動更新を行う時間(分)を設定 (デフォルトでは60分で自動更新を終了)</p>
+  <li>Auto Remove Invalid Data</li>
+  <p>行き先に到着後など、古くなった列車運行情報を自動で削除するかどうか選択</p>
+  <li>GPS Radius (meter)</li>
+  <p>現在地に近い駅を取得する際の現在地からの半径をメートルで指定</p>
+  <li>Closeボタン</li>
+  <p>Settings画面を閉じる</p>
+</ul>
+      </p>
+    </div>
+    <a href="#" class="thumbnail">
+      <img src="https://dl.dropboxusercontent.com/u/135100373/contest/manual/img/%E5%86%99%E7%9C%9F%202014-11-17%209%2043%2013.png" alt="">
+    </a>
+  </div>
+
+  <div class="col-xs-12 col-md-6" id="s6">
+    <div class="caption">
+      <h3>6. 列車情報、列車時刻表画面</h3>
+      <p>
+<ul>
+  <li>列車情報</li>
+  <p>路線、方面、列車種別、行き先、列車番号を表示</p>
+  <li>運行情報</li>
+  <p>列車のロケーションを表示</p>
+  <li>列車時刻表</li>
+  <p>列車のロケーションと東京メトロ線内の駅の時刻表を表示</p>
+  <li>Closeボタン</li>
+  <p>列車情報、列車時刻表画面を閉じる</p>
+</ul>
+      </p>
+    </div>
+    <a href="#" class="thumbnail">
+      <img src="https://dl.dropboxusercontent.com/u/135100373/contest/manual/img/%E5%86%99%E7%9C%9F%202014-11-17%209%2040%2032.png" alt="">
+    </a>
+  </div>
+
+
+  <div class="col-xs-12 col-md-6" id="s7">
+    <div class="caption">
+      <h3>7. アプリケーション情報画面</h3>
+    </div>
+    <a href="#" class="thumbnail">
+      <img src="https://dl.dropboxusercontent.com/u/135100373/contest/manual/img/%E5%86%99%E7%9C%9F%202014-11-17%209%2043%2029.png" alt="">
+    </a>
+  </div>
+
+</div>
+</div>
+<p>更新日時: 2014年11月17日</p>
+<hr />
+<p>
+&copy; 2014 Takashi KOBAYASHI<br>
+<a href="http://twitter.com/sumo_ninja_jp" target="_blank">twitter@sumo_ninja_jp</a>
+</p>
+</div>
+
+  <script type="text/javascript" src="script.js"></script>
+</body>
+</html>
