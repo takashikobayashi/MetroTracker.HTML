@@ -1,0 +1,265 @@
+<!doctype html>
+<!-- Tokyo Metro App | jQuery, AngularJS, Bootstrap | JavaScript, html5, CSS3 Study | (c) 2014 twitter@sumo_ninja_jp -->
+
+<html ng-app="app20140917">
+<head>
+  <title>MetroTracker.HTML</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
+
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <!--link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" /-->
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700" />
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+<div ng-controller="app20140917Controller" class="container">
+
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-menu">
+      <!--img src="img/tokyometro.png"-->
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+
+    <a class="navbar-brand" href="#">{{app.name}}</a>
+  </div>
+  <div class="collapse navbar-collapse" id="nav-menu">
+    <ul class="nav navbar-nav">
+      <li><a href="" ng-click="showAddTrainDlg1()">Add Tracking Trains...</a></li>
+      <li><a href="" ng-click="doUpdateTrainInfo()">Update Train Info Now</a></li>
+      <li><a href="" ng-click="doUpdateTrackingTrains()">Update Tracking Info Now</a></li>
+      <li><a href="" ng-click="showSettingDlg()">Setting...</a></li>
+      <li><a href="./Manual/Index.html" target="_help">Help...</a></li>
+      <li><a href="" ng-click="showAboutDlg()">About...</a></li>
+    </ul>
+  </div>
+  </div>
+</nav>
+
+<div class="modal fade" id="addTrainDlg1" tabindex="-1" role="dialog" aria-labelledby="addTrainDlg1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Add Train at Near Station</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+  <label for="dlg1_slt1">Near Station: </label>
+  <select id="dlg1_slt1" class="form-control" ng-model="data.currentStation" ng-options="station.disp_name for station in data.nearStations" ng-change="getTrainsAtStation()">
+    <!-option></option-->
+  </select>
+        </p>
+        <p>
+  <label for="dlg1_slt2">Near Trains: </label>
+  <select id="dlg1_slt2" class="form-control" ng-model="data.currentTrain" ng-options="train.disp_dest for train in data.nearTrains">
+    <!-option></option-->
+  </select>
+        </p>
+        <p>
+  <button type="button" class="btn btn-default" ng-click="getTrainsAtStation()">Get Trains</button>
+        </p>
+        <p>
+<div class="progress">
+  <div class="progress-bar" role="progressbar" aria-valuenow="{{disp.dlg1_pgb1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{disp.dlg1_pgb1}}%;">
+    <!--span class="sr-only">{{disp.dlg1_pgb1}}% Complete</span-->
+  </div>
+</div>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="addToTrack()">Add</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="trainInfoDlg" tabindex="-1" role="dialog" aria-labelledby="trainInfoDlg" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">About Train & Timetable</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+        </p>
+  <h4>{{disp.train.disp_rail + " " + disp.train.disp_dir}}</h4>
+  <h4>{{disp.train.disp_type+" "+disp.train.disp_dest+" "+disp.train.disp_num}}</h4>
+  <h4>{{disp.train.getStatus()}}</h4>
+  <h4 ng-if="disp.train.disp_delay">{{disp.train.disp_delay}}分遅れ</h4>
+  <h4 ng-if="! disp.train.isValid">次回の更新で削除</h4>
+        <p>
+<div class="table-responsive">
+<table class="table">
+  <tr>
+    <th ng-repeat="item in disp.train.disp_table">{{item["sta"]}}</th>
+  </tr>
+  <tr>
+    <td ng-repeat="item in disp.train.disp_table">{{item["time"]}}</td>
+  </tr>
+  <tr>
+    <td ng-repeat="item in disp.train.disp_table">{{item["mark"]}}</td>
+  </tr>
+</table>
+</div>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="settingDlg" tabindex="-1" role="dialog" aria-labelledby="settingDlg" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Settings</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+  <div class="checkbox">
+    <label>
+    <input type="checkbox" id ="dlg2_chb1" ng-model="pref.showTrainInfo" ng-change="disp.showTrainInfo = pref.showTrainInfo" />Show Train Info
+    <label>
+  </div>
+        </p>
+        <p>
+  <div class="checkbox">
+    <label>
+    <input type="checkbox" id ="dlg2_chb2" ng-model="pref.autoUpdateInfo" ng-change="changeUpdateSetting()" />Auto Update Train Info
+    <label>
+  </div>
+        </p>
+        <p>
+  <label for="dlg2_txt2">Auto update time (minutes): </label>
+  <input type="number" id="dlg2_txt2" class="form-control" min="60" ng-model="pref.maxUpdateMinutes" ng-disabled="! pref.autoUpdateInfo" ng-change="restartUpdate()">
+  </input>
+        </p>
+        <p>
+  <div class="checkbox">
+    <label>
+    <input type="checkbox" id ="dlg2_chb3" ng-model="pref.autoRemoveInvalids" />Auto Remove Invalid Data
+    <label>
+  </div>
+        </p>
+        <p>
+  <label for="dlg2_txt1">GPS Radius (meter): </label>
+  <input type="number" id="dlg2_txt1" class="form-control" min="1000" ng-model="pref.radius">
+  </input>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="aboutDlg" tabindex="-1" role="dialog" aria-labelledby="aboutDlg" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">{{app.name}}</h4>
+      </div>
+      <div class="modal-body">
+<h4>Version {{app.version}}</h4>
+<p>
+Tracking Tokyo Metro Train(s) you're taking on.
+Designed for and developed on iPhone.
+</p>
+<p>
+Copyright 2014 Takashi KOBAYASHI
+<br>
+<a href="http://twitter.com/sumo_ninja_jp" target="_blank">twitter@sumo_ninja_jp</a>
+</p>
+<p>
+Source code under GPL:
+<br>
+<a href="https://github.com/takashikobayashi/MetroTracker.HTML" target="_blank" >takashikobayashi / MetroTracker.HTML</a>
+</p>
+<h4>Special thanks to:</h4>
+<p>
+bootstrap 3.3.1
+<br>
+<a href="http://getbootstrap.com" target="_blank">http://getbootstrap.com</a>
+</p>
+<p>
+angularjs 1.3.0
+<br>
+<a href="https://angularjs.org" target="_blank">https://angularjs.org</a>
+</p>
+<p>
+jQuery 2.1.1
+<br>
+<a href="http://jquery.com" target="_blank">http://jquery.com</a>
+</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div ng-if="disp.showTrainInfo">
+<div class="alert alert-dismissible {{info.disp_class}}" role="alert" ng-repeat="info in disp.trainInfo">
+  <button type="button" class="close" data-dismiss="alert" ng-click="dismissTrainInfo($index)"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+<p>{{info.disp_rail}}線</p>
+<p>{{info.disp_time}}</p>
+<p>{{info.disp_text}}</p>
+</div>
+</div>
+
+<div ng-repeat="train in data.trackingTrains">
+  <div class="jumbotron {{train.disp_class}}">
+  <h1>{{train.disp_rail}}</h1>
+  <h2>{{train.disp_dir}}</h2>
+  <h2>{{train.disp_type+" "+train.disp_dest}}</h2>
+  <h4 ng-if="train.disp_delay">{{train.disp_delay}}分遅れ</h4>
+
+  <h3>{{train.getStatus()}}</h3>
+  <h4>{{train.disp_time}}<span ng-if="! train.isValid"><br>次回の更新で削除</span></h4>
+  <p>
+  <a htef="" ng-click="showTrainInfoDlg($index)">Info & Timetable</a> / <a href="" ng-click="removeFromTrack($index)">Delete</a>
+  </p>
+  </div>
+</div>
+<p class="text-center">
+<button type="button" class="btn btn-lg btn-default" ng-click="showAddTrainDlg1()"><h1>Tap here  <span class="glyphicon glyphicon-hand-left"></span></h1><p>to Add Tracking Trains</p></button>
+</p>
+<p>
+<div class="progress">
+  <div class="progress-bar" role="progressbar" aria-valuenow="{{disp.main_pgb1}}" aria-valuemin="0" aria-valuemax="100" style="width: {{disp.main_pgb1}}%;">
+    <span class="sr-only">{{disp.main_pgb1}}% Complete</span>
+  </div>
+</div>
+</p>
+<hr />
+<p>
+&copy; 2014 Takashi KOBAYASHI<br>
+<a href="http://twitter.com/sumo_ninja_jp" target="_blank">twitter@sumo_ninja_jp</a>
+</p>
+</div>
+
+  <script type="text/javascript" src="script.js"></script>
+</body>
+</html>
